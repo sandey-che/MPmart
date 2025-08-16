@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { X, Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
+import { X, Minus, Plus, ShoppingCart as CartIcon, Trash2 } from "lucide-react";
 import { useState } from "react";
 import type { CartItemWithProduct } from "@shared/schema";
 
@@ -132,7 +132,7 @@ export default function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b">
             <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-              <ShoppingCart className="h-5 w-5 mr-2" />
+              <CartIcon className="h-5 w-5 mr-2" />
               Shopping Cart
               {totalItems > 0 && (
                 <Badge className="ml-2" data-testid="text-cart-total-items">{totalItems}</Badge>
@@ -166,7 +166,7 @@ export default function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
               </div>
             ) : cartItems.length === 0 ? (
               <div className="text-center py-12 text-gray-500">
-                <ShoppingCart className="h-16 w-16 mx-auto mb-4 text-gray-300" />
+                <CartIcon className="h-16 w-16 mx-auto mb-4 text-gray-300" />
                 <p className="text-lg font-medium mb-2">Your cart is empty</p>
                 <p className="text-sm">Add some products to get started!</p>
               </div>
