@@ -83,16 +83,18 @@ export default function CustomerHeader({
             </Button>
             
             {/* Admin Panel Button */}
-            <Button
+{/*             <Button
               variant="ghost"
               size="sm"
+              disabled={true} // Disable for now, can be enabled later
               onClick={handleAdminPanel}
+              hidden={true} // Hide for now, can be enabled later
               className="hidden sm:flex items-center space-x-2 hover:text-primary"
               data-testid="button-admin-panel"
             >
               <Settings className="h-4 w-4" />
               <span>Admin</span>
-            </Button>
+            </Button> */}
           </div>
         </div>
         
