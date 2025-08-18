@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query";
-import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
@@ -14,15 +13,10 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, onView, compact = false }: ProductCardProps) {
-  const { user } = useAuth();
   const { toast } = useToast();
 
   const addToCartMutation = useMutation({
     mutationFn: async () => {
-      if (!user) {
-        throw new Error("Please log in to add items to cart");
-      }
-      
       await apiRequest("POST", "/api/cart", {
         productId: product.id,
         quantity: 1,

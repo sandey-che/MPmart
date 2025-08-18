@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,12 +21,10 @@ export default function CustomerHeader({
   onSearchChange, 
   onSearch 
 }: CustomerHeaderProps) {
-  const { user } = useAuth();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   const { data: cartItems = [] } = useQuery<CartItemWithProduct[]>({
     queryKey: ["/api/cart"],
-    enabled: !!user,
   });
 
   const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -85,53 +82,17 @@ export default function CustomerHeader({
               )}
             </Button>
             
-            {/* User Menu */}
-            {user && (
-              <DropdownMenu open={isUserMenuOpen} onOpenChange={setIsUserMenuOpen}>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="flex items-center space-x-2 hover:text-primary"
-                    data-testid="button-user-menu"
-                  >
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={user.profileImageUrl || ""} />
-                      <AvatarFallback>
-                        {(user.firstName || user.email || "U").charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="hidden sm:block">
-                      {user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.email}
-                    </span>
-                  </Button>
-                </DropdownMenuTrigger>
-                
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem data-testid="menu-profile">
-                    <User className="h-4 w-4 mr-2" />
-                    My Profile
-                  </DropdownMenuItem>
-                  <DropdownMenuItem data-testid="menu-orders">
-                    <History className="h-4 w-4 mr-2" />
-                    Order History
-                  </DropdownMenuItem>
-                  {user.isAdmin && (
-                    <>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={handleAdminPanel} data-testid="menu-admin">
-                        <Settings className="h-4 w-4 mr-2" />
-                        Admin Panel
-                      </DropdownMenuItem>
-                    </>
-                  )}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} data-testid="menu-logout">
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
+            {/* Admin Panel Button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleAdminPanel}
+              className="hidden sm:flex items-center space-x-2 hover:text-primary"
+              data-testid="button-admin-panel"
+            >
+              <Settings className="h-4 w-4" />
+              <span>Admin</span>
+            </Button>
           </div>
         </div>
         

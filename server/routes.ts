@@ -1,7 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
 import { getChatbotResponse, generateProductRecommendations } from "./openai";
 import {
   insertCategorySchema,
@@ -11,15 +10,24 @@ import {
 } from "@shared/schema";
 import { z } from "zod";
 
-export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware
-  await setupAuth(app);
+// Mock user for non-authenticated mode
+const MOCK_USER_ID = "mock-user-123";
 
-  // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+export async function registerRoutes(app: Express): Promise<Server> {
+  // Mock auth route - returns a default user
+  app.get('/api/auth/user', async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
+      // Try to get existing mock user or create one
+      let user = await storage.getUser(MOCK_USER_ID);
+      if (!user) {
+        user = await storage.upsertUser({
+          id: MOCK_USER_ID,
+          email: "demo@example.com",
+          firstName: "Demo",
+          lastName: "User",
+          isAdmin: false,
+        });
+      }
       res.json(user);
     } catch (error) {
       console.error("Error fetching user:", error);
@@ -38,15 +46,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/categories', isAuthenticated, async (req: any, res) => {
+  app.post('/api/categories', async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      
-      if (!user?.isAdmin) {
-        return res.status(403).json({ message: "Admin access required" });
-      }
-
       const categoryData = insertCategorySchema.parse(req.body);
       const category = await storage.createCategory(categoryData);
       res.json(category);
@@ -90,15 +91,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/products', isAuthenticated, async (req: any, res) => {
+  app.post('/api/products', async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      
-      if (!user?.isAdmin) {
-        return res.status(403).json({ message: "Admin access required" });
-      }
-
       const productData = insertProductSchema.parse(req.body);
       const product = await storage.createProduct(productData);
       res.json(product);
@@ -108,15 +102,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put('/api/products/:id', isAuthenticated, async (req: any, res) => {
+  app.put('/api/products/:id', async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      
-      if (!user?.isAdmin) {
-        return res.status(403).json({ message: "Admin access required" });
-      }
-
       const productData = insertProductSchema.partial().parse(req.body);
       const product = await storage.updateProduct(req.params.id, productData);
       
@@ -131,15 +118,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete('/api/products/:id', isAuthenticated, async (req: any, res) => {
+  app.delete('/api/products/:id', async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      
-      if (!user?.isAdmin) {
-        return res.status(403).json({ message: "Admin access required" });
-      }
-
       const success = await storage.deleteProduct(req.params.id);
       
       if (!success) {
@@ -154,10 +134,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Cart routes
-  app.get('/api/cart', isAuthenticated, async (req: any, res) => {
+  app.get('/api/cart', async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const cartItems = await storage.getCartItems(userId);
+      const cartItems = await storage.getCartItems(MOCK_USER_ID);
       res.json(cartItems);
     } catch (error) {
       console.error("Error fetching cart:", error);
@@ -165,12 +144,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/cart', isAuthenticated, async (req: any, res) => {
+  app.post('/api/cart', async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
       const cartItemData = insertCartItemSchema.parse({
         ...req.body,
-        userId,
+        userId: MOCK_USER_ID,
       });
       
       const cartItem = await storage.addToCart(cartItemData);
@@ -181,7 +159,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put('/api/cart/:id', isAuthenticated, async (req: any, res) => {
+  app.put('/api/cart/:id', async (req, res) => {
     try {
       const { quantity } = req.body;
       const cartItem = await storage.updateCartItem(req.params.id, quantity);
@@ -197,7 +175,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete('/api/cart/:id', isAuthenticated, async (req: any, res) => {
+  app.delete('/api/cart/:id', async (req, res) => {
     try {
       const success = await storage.removeFromCart(req.params.id);
       
@@ -213,18 +191,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Order routes
-  app.get('/api/orders', isAuthenticated, async (req: any, res) => {
+  app.get('/api/orders', async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      
-      let orders;
-      if (user?.isAdmin) {
-        orders = await storage.getOrders();
-      } else {
-        orders = await storage.getOrdersByUser(userId);
-      }
-      
+      // Always return orders for the mock user
+      const orders = await storage.getOrdersByUser(MOCK_USER_ID);
       res.json(orders);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -232,12 +202,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/orders', isAuthenticated, async (req: any, res) => {
+  app.post('/api/orders', async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
-      
       // Get cart items
-      const cartItems = await storage.getCartItems(userId);
+      const cartItems = await storage.getCartItems(MOCK_USER_ID);
       if (cartItems.length === 0) {
         return res.status(400).json({ message: "Cart is empty" });
       }
@@ -249,7 +217,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create order
       const orderData = insertOrderSchema.parse({
-        userId,
+        userId: MOCK_USER_ID,
         total: total.toString(),
         deliveryAddress: req.body.deliveryAddress,
       });
@@ -267,7 +235,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Clear cart
-      await storage.clearCart(userId);
+      await storage.clearCart(MOCK_USER_ID);
       
       res.json(order);
     } catch (error) {
@@ -276,15 +244,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put('/api/orders/:id/status', isAuthenticated, async (req: any, res) => {
+  app.put('/api/orders/:id/status', async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      
-      if (!user?.isAdmin) {
-        return res.status(403).json({ message: "Admin access required" });
-      }
-
       const { status } = req.body;
       const order = await storage.updateOrderStatus(req.params.id, status);
       
@@ -312,15 +273,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Analytics route
-  app.get('/api/analytics', isAuthenticated, async (req: any, res) => {
+  app.get('/api/analytics', async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      
-      if (!user?.isAdmin) {
-        return res.status(403).json({ message: "Admin access required" });
-      }
-
       // Get basic analytics
       const orders = await storage.getOrders();
       const products = await storage.getProducts();

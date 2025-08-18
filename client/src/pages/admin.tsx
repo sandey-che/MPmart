@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,24 +35,8 @@ interface AnalyticsData {
 
 export default function Admin() {
   const { toast } = useToast();
-  const { isAuthenticated, isLoading } = useAuth();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
-
-  // Redirect to home if not authenticated
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      toast({
-        title: "Unauthorized",
-        description: "You are logged out. Logging in again...",
-        variant: "destructive",
-      });
-      setTimeout(() => {
-        window.location.href = "/api/login";
-      }, 500);
-      return;
-    }
-  }, [isAuthenticated, isLoading, toast]);
 
   const { data: analytics } = useQuery<AnalyticsData>({
     queryKey: ["/api/analytics"],
@@ -86,17 +68,6 @@ export default function Admin() {
       });
     },
     onError: (error) => {
-      if (isUnauthorizedError(error)) {
-        toast({
-          title: "Unauthorized",
-          description: "You are logged out. Logging in again...",
-          variant: "destructive",
-        });
-        setTimeout(() => {
-          window.location.href = "/api/login";
-        }, 500);
-        return;
-      }
       toast({
         title: "Error",
         description: "Failed to update order status",
@@ -119,17 +90,6 @@ export default function Admin() {
       });
     },
     onError: (error) => {
-      if (isUnauthorizedError(error)) {
-        toast({
-          title: "Unauthorized",
-          description: "You are logged out. Logging in again...",
-          variant: "destructive",
-        });
-        setTimeout(() => {
-          window.location.href = "/api/login";
-        }, 500);
-        return;
-      }
       toast({
         title: "Error",
         description: "Failed to add product",
@@ -174,11 +134,7 @@ export default function Admin() {
     }
   };
 
-  if (isLoading) {
-    return <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="text-xl">Loading...</div>
-    </div>;
-  }
+
 
   return (
     <div className="min-h-screen bg-gray-100">

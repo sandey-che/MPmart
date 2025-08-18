@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
@@ -20,13 +19,11 @@ interface ShoppingCartProps {
 }
 
 export default function ShoppingCart({ isOpen, onClose }: ShoppingCartProps) {
-  const { user } = useAuth();
   const { toast } = useToast();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   const { data: cartItems = [], isLoading } = useQuery<CartItemWithProduct[]>({
     queryKey: ["/api/cart"],
-    enabled: !!user,
   });
 
   const updateQuantityMutation = useMutation({
