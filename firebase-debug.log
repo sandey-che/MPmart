@@ -1,0 +1,71 @@
+[debug] [2025-08-18T13:44:20.940Z] ----------------------------------------------------------------------
+[debug] [2025-08-18T13:44:20.941Z] Command:       /usr/local/share/nvm/versions/node/v22.17.0/bin/node /home/codespace/nvm/current/bin/firebase init hosting
+[debug] [2025-08-18T13:44:20.942Z] CLI Version:   14.12.1
+[debug] [2025-08-18T13:44:20.942Z] Platform:      linux
+[debug] [2025-08-18T13:44:20.942Z] Node Version:  v22.17.0
+[debug] [2025-08-18T13:44:20.942Z] Time:          Mon Aug 18 2025 13:44:20 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-08-18T13:44:20.942Z] Env Overrides: GITHUB_API_URL, GITHUB_API_URL
+[debug] [2025-08-18T13:44:20.943Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-08-18T13:44:21.183Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-08-18T13:44:21.183Z] > authorizing via signed-in user (sandey.che@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /workspaces/MPmart
+
+Before we get started, keep in mind:
+
+  * You are currently outside your home directory
+  * You are initializing within an existing Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-08-18T13:44:21.186Z] Using project from CLI flag: modernpride-49fda
+[debug] [2025-08-18T13:44:21.187Z] Checked if tokens are valid: false, expires at: 1755521620071
+[debug] [2025-08-18T13:44:21.187Z] Checked if tokens are valid: false, expires at: 1755521620071
+[debug] [2025-08-18T13:44:21.187Z] > refreshing access token with scopes: []
+[debug] [2025-08-18T13:44:21.189Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-08-18T13:44:21.189Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-08-18T13:44:21.342Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-08-18T13:44:21.342Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-08-18T13:44:21.350Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/modernpride-49fda [none]
+[debug] [2025-08-18T13:44:21.960Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/modernpride-49fda 200
+[debug] [2025-08-18T13:44:21.960Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/modernpride-49fda {"projectId":"modernpride-49fda","projectNumber":"439846268156","displayName":"ModernPride","name":"projects/modernpride-49fda","resources":{"hostingSite":"modernpride-49fda"},"state":"ACTIVE","etag":"1_b1634db7-9d4c-4468-a1c1-785d5c7754f6"}
+[info] i  Using project modernpride-49fda (ModernPride) 
+[info] 
+=== Hosting Setup
+[debug] [2025-08-18T13:44:22.050Z] Checked if tokens are valid: true, expires at: 1755528260342
+[debug] [2025-08-18T13:44:22.050Z] Checked if tokens are valid: true, expires at: 1755528260342
+[debug] [2025-08-18T13:44:22.050Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/modernpride-49fda [none]
+[debug] [2025-08-18T13:44:22.481Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/modernpride-49fda 200
+[debug] [2025-08-18T13:44:22.481Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/modernpride-49fda {"projectId":"modernpride-49fda","projectNumber":"439846268156","displayName":"ModernPride","name":"projects/modernpride-49fda","resources":{"hostingSite":"modernpride-49fda"},"state":"ACTIVE","etag":"1_b1634db7-9d4c-4468-a1c1-785d5c7754f6"}
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 
+[info] i  client/404.html is unchanged 
+[debug] [2025-08-18T13:45:10.329Z] >>> [apiv2][query] GET https://www.gstatic.com/firebasejs/releases.json [none]
+[debug] [2025-08-18T13:45:10.413Z] <<< [apiv2][status] GET https://www.gstatic.com/firebasejs/releases.json 200
+[debug] [2025-08-18T13:45:10.413Z] <<< [apiv2][body] GET https://www.gstatic.com/firebasejs/releases.json {"current":{"version":"12.1.0","browserURL":"https://www.gstatic.com/firebasejs/12.1.0/firebase.js","packageURL":"https://www.gstatic.com/firebasejs/12.1.0/firebase.tgz"},"live":{"version":"12.1","browserURL":"https://www.gstatic.com/firebasejs/live/12.1/firebase.js","packageURL":"https://www.gstatic.com/firebasejs/live/12.1/firebase.tgz"},"components":{"ai":"https://www.gstatic.com/firebasejs/12.1.0/firebase-ai.js","analytics":"https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js","app":"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js","app-check":"https://www.gstatic.com/firebasejs/12.1.0/firebase-app-check.js","auth":"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js","auth/cordova":"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth/cordova.js","auth/web-extension":"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth/web-extension.js","functions":"https://www.gstatic.com/firebasejs/12.1.0/firebase-functions.js","firestore":"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js","firestore/lite":"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore/lite.js","installations":"https://www.gstatic.com/firebasejs/12.1.0/firebase-installations.js","storage":"https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js","performance":"https://www.gstatic.com/firebasejs/12.1.0/firebase-performance.js","remote-config":"https://www.gstatic.com/firebasejs/12.1.0/firebase-remote-config.js","messaging":"https://www.gstatic.com/firebasejs/12.1.0/firebase-messaging.js","messaging/sw":"https://www.gstatic.com/firebasejs/12.1.0/firebase-messaging/sw.js","database":"https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js","data-connect":"https://www.gstatic.com/firebasejs/12.1.0/firebase-data-connect.js","firestore.memory":"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.memory.js"}}
+[info] i  Skipping write of client/index.html 
+[info] 
+[info] i  Detected a .git folder at /workspaces/MPmart 
+[info] i  Authorizing with GitHub to upload your service account to a GitHub repository's secrets store. 
+[info] 
+[info] Visit this URL on this device to log in:
+[info] https://github.com/login/oauth/authorize?client_id=89cf50f02ac6aaed3484&state=731630176&redirect_uri=http%3A%2F%2Flocalhost%3A9005&scope=read%3Auser%20repo%20public_repo
+[info] 
+[info] Waiting for authentication...
