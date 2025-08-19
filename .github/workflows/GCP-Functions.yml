@@ -1,0 +1,43 @@
+name: Build and Deploy to Google Cloud Function
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'   # Change to your Node.js version if needed
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Build 
+        run: npm run build
+        if: ${{ hashFiles('package.json', 'package-lock.json') != '' && exists('package.json') && contains(steps['Install dependencies'].outputs.stdout, 'build') }}
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Deploy to Google Cloud Function
+        run: |
+          gcloud functions deploy ${{ secrets.GCF_NAME }} \
+            --region=${{ secrets.GCF_REGION }} \
+            --runtime=nodejs20 \
+            --trigger-http \
+            --entry-point=${{ secrets.GCF_ENTRY_POINT }} \
+            --allow-unauthenticated
