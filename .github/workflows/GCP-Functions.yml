@@ -24,7 +24,6 @@ jobs:
 
       - name: Run Build 
         run: npm run build
-        if: ${{ hashFiles('package.json', 'package-lock.json') != '' && exists('package.json') && contains(steps['Install dependencies'].outputs.stdout, 'build') }}
 
       - name: Setup Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
